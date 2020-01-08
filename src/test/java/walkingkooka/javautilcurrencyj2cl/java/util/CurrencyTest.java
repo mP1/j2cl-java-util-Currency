@@ -22,6 +22,8 @@ import walkingkooka.ToStringTesting;
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
 
+import java.util.Locale;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,18 +32,74 @@ public final class CurrencyTest implements ClassTesting<Currency>,
         ToStringTesting<Currency> {
 
     @Test
-    public void testInstanceInvalidCodeFails() {
+    public void testGetInstanceLocaleNullFails() {
+        assertThrows(NullPointerException.class, () -> Currency.getInstance((Locale)null));
+    }
+
+    @Test
+    public void testGetInstanceLocaleUnknownFails() {
+        final Locale unknown = Locale.forLanguageTag("und");
+
+        assertThrows(IllegalArgumentException.class, () -> java.util.Currency.getInstance(unknown));
+        assertThrows(IllegalArgumentException.class, () -> Currency.getInstance(unknown));
+    }
+
+    @Test
+    public void testGetInstanceLocaleEnAu() {
+        final Locale locale = Locale.forLanguageTag("en-AU");
+        this.check(Currency.getInstance(locale), java.util.Currency.getInstance(locale));
+    }
+
+    @Test
+    public void testGetInstanceLocaleNnNo() {
+        final Locale locale = Locale.forLanguageTag("nn-NO");
+        assertEquals("NO", locale.getCountry(), "country");
+        this.check(Currency.getInstance(locale), java.util.Currency.getInstance(locale));
+    }
+
+    @Test
+    public void testGetInstanceLocaleNoNoNy() {
+        final Locale locale = Locale.forLanguageTag("no-NO-NY");
+        assertEquals("NO", locale.getCountry(), "country");
+        this.check(Currency.getInstance(locale), java.util.Currency.getInstance(locale));
+    }
+
+    @Test
+    public void testGetInstanceLocaleAllLocales() {
+        for(final Locale locale : Locale.getAvailableLocales()) {
+            // not all Locales have a currency, eg "ar" for arabic doesnt belong to a single country.
+
+            java.util.Currency jre;
+            try {
+                jre = java.util.Currency.getInstance(locale);
+            } catch (final IllegalArgumentException ignore) {
+                jre = null;
+            }
+
+            if(null!=jre) {
+                this.check(Currency.getInstance(locale), jre);
+            }
+        }
+    }
+
+    @Test
+    public void testGetInstanceStringNullFails() {
+        assertThrows(NullPointerException.class, () -> Currency.getInstance((String)null));
+    }
+
+    @Test
+    public void testGetInstanceStringInvalidCodeFails() {
         assertThrows(IllegalArgumentException.class, () -> Currency.getInstance("123"));
     }
 
     @Test
     public void testGetInstanceAud() {
-        check(java.util.Currency.getInstance("AUD"));
+        this.check(java.util.Currency.getInstance("AUD"));
     }
 
     @Test
     public void testGetInstanceNz() {
-        check(java.util.Currency.getInstance("NZD"));
+        this.check(java.util.Currency.getInstance("NZD"));
     }
 
     @Test
@@ -60,6 +118,34 @@ public final class CurrencyTest implements ClassTesting<Currency>,
         Currency.getAvailableCurrencies().forEach(this::check);
     }
 
+    @Test
+    public void testGetSymbolAud_ar_jo() {
+        this.checkLocale(Currency.getInstance("AUD"),
+                java.util.Currency.getInstance("AUD"),
+                Locale.forLanguageTag("ar-JO"));
+    }
+
+    @Test
+    public void testGetSymbolAud_nn() {
+        this.checkLocale(Currency.getInstance("AUD"),
+                java.util.Currency.getInstance("AUD"),
+                Locale.forLanguageTag("nn"));
+    }
+
+    @Test
+    public void testGetSymbolNOK_nn_NO() {
+        this.checkLocale(Currency.getInstance("NOK"),
+                java.util.Currency.getInstance("NOK"),
+                Locale.forLanguageTag("nn-NO"));
+    }
+
+    @Test
+    public void testGetSymbolUnknownLocale() {
+        this.checkLocale(Currency.getInstance("AUD"),
+                java.util.Currency.getInstance("AUD"),
+                Locale.forLanguageTag("qrstuv"));
+    }
+
     private void check(final Currency currency) {
         this.check(currency, java.util.Currency.getInstance(currency.getCurrencyCode()));
     }
@@ -74,6 +160,30 @@ public final class CurrencyTest implements ClassTesting<Currency>,
         assertEquals(jre.getDefaultFractionDigits(), emulated.getDefaultFractionDigits(), "defaultFractionDigits");
         assertEquals(jre.getNumericCode(), emulated.getNumericCode(), "numericCode");
         assertEquals(jre.getNumericCodeAsString(), emulated.getNumericCodeAsString(), "numericCodeAsString");
+
+        for (final Locale locale : Locale.getAvailableLocales()) {
+            this.checkLocale(emulated, jre, locale);
+        }
+    }
+
+    private void checkLocale(final Currency emulated,
+                             final java.util.Currency jre,
+                             final Locale locale) {
+        boolean invalidLocale;
+        try {
+            jre.getSymbol(locale);
+            invalidLocale = false;
+        } catch (final Exception e) {
+            invalidLocale = true;
+        }
+
+        if (invalidLocale) {
+            assertThrows(NullPointerException.class, () -> emulated.getSymbol(locale));
+        } else {
+            assertEquals(jre.getSymbol(locale),
+                    emulated.getSymbol(locale),
+                    () -> jre + " getSymbol for locale.languageTag: " + locale.toLanguageTag() + " Locale.language: " + locale.getLanguage() + " Locale.country: " + locale.getCountry() + " Locale.toString " + locale);
+        }
     }
 
     // toString.........................................................................................................
