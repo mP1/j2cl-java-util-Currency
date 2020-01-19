@@ -34,24 +34,30 @@ import java.util.stream.Collectors;
 /**
  * A simple tool that generates each and every currency known to the system.
  */
-public final class CurrencyDataTool {
+public final class CurrencyProviderTool {
 
     public static void main(final String[] args) {
         final IndentingPrinter printer = Printers.sysOut().indenting(Indentation.with("  "));
-        new CurrencyDataTool(printer).printAll();
+        new CurrencyProviderTool(printer).printAll();
         printer.flush();
     }
 
-    private CurrencyDataTool(final IndentingPrinter printer) {
+    private CurrencyProviderTool(final IndentingPrinter printer) {
         super();
         this.printer = printer;
     }
 
     private void printAll() {
-        java.util.Currency.getAvailableCurrencies()
-                .stream()
-                .sorted(CurrencyDataTool::compare)
-                .forEach(this::print);
+        this.print("static void register() {");
+        this.indent();
+        {
+            java.util.Currency.getAvailableCurrencies()
+                    .stream()
+                    .sorted(CurrencyProviderTool::compare)
+                    .forEach(this::print);
+            this.outdent();
+            this.print("}");
+        }
     }
 
     private static int compare(final Currency left, final Currency right) {
@@ -72,7 +78,7 @@ public final class CurrencyDataTool {
 
             Set<Locale> locales = symbolToLocales.get(symbol);
             if (null == locales) {
-                locales = Sets.sorted(CurrencyDataTool::compareLocaleLanguageTag);
+                locales = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
                 symbolToLocales.put(symbol, locales);
             }
             locales.add(locale);
@@ -92,53 +98,47 @@ public final class CurrencyDataTool {
         }
 
         //symbolToLocales.remove(most);
-
-        // print the java definition...
-        this.print("static {");
+        this.print(Currency.class.getSimpleName() + ".register(" + quote(currency.getCurrencyCode()) + ",");
         this.indent();
         {
-            this.print("new " + Currency.class.getSimpleName() + "(" + quote(currency.getCurrencyCode()) + ",");
-            this.indent();
-            {
-                this.print(currency.getDefaultFractionDigits() + ",");
-                this.print(currency.getNumericCode() + ",");
-                this.print(quote(most) + (symbolToLocales.size() >= 1 ? "," : "")); // defaultSymbol
+            this.print(currency.getDefaultFractionDigits() + ", // defaultFractionDigits");
+            this.print(currency.getNumericCode() + ", // numericCode");
+            this.print(quote(most) + (symbolToLocales.size() >= 1 ? "," : "") + " // defaultSymbol"); // defaultSymbol
 
-                final Set<Locale> locales = Sets.sorted(CurrencyDataTool::compareLocaleLanguageTag);
+            final Set<Locale> locales = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
 
-                for (final Locale possible : Locale.getAvailableLocales()) {
-                    try {
-                        final java.util.Currency possibleCurrency = java.util.Currency.getInstance(possible);
-                        if (currency.getCurrencyCode().equals(possibleCurrency.getCurrencyCode())) {
-                            locales.add(possible);
-                        }
-                    } catch (final Exception ignore) {
-
+            for (final Locale possible : Locale.getAvailableLocales()) {
+                try {
+                    final java.util.Currency possibleCurrency = java.util.Currency.getInstance(possible);
+                    if (currency.getCurrencyCode().equals(possibleCurrency.getCurrencyCode())) {
+                        locales.add(possible);
                     }
-                }
+                } catch (final Exception ignore) {
 
-                this.print("locales(" + quote(locales.stream()
-                        .map(Locale::toLanguageTag)
-                        .collect(Collectors.joining(","))) + "),");
-
-                int i = 0;
-                for (final Entry<String, Set<Locale>> symbolAndLocales : symbolToLocales.entrySet()) {
-                    final String separator = (i < symbolToLocales.size() - 1) ?
-                            "," :
-                            "";
-                    this.print("symbolToLocales(" + quote(symbolAndLocales.getValue()
-                            .stream()
-                            .map(Locale::toLanguageTag)
-                            .collect(Collectors.joining(",", symbolAndLocales.getKey() + ",", ""))) + ")" + separator);
-
-                    i++;
                 }
             }
-            this.outdent();
-            this.print(");");
+
+            this.print(quote(locales.stream()
+                    .map(Locale::toLanguageTag)
+                    .collect(Collectors.joining(","))) + ", // locales");
+
+            int i = 0;
+            for (final Entry<String, Set<Locale>> symbolAndLocales : symbolToLocales.entrySet()) {
+                final String separator = (i < symbolToLocales.size() - 1) ?
+                        "," :
+                        "";
+                this.print(quote(symbolAndLocales.getValue()
+                        .stream()
+                        .map(Locale::toLanguageTag)
+                        .collect(Collectors.joining(",", symbolAndLocales.getKey() + ",", ""))) + separator + " // symbolToLocales");
+
+                i++;
+            }
         }
         this.outdent();
-        this.print("}");
+        this.print(");");
+
+        this.print();
     }
 
     private static int compareLocaleLanguageTag(final Locale left, final Locale right) {
