@@ -9,7 +9,7 @@
     <groupId>walkingkooka</groupId>
     <artifactId>java-util-Currency-j2cl</artifactId>
     <packaging>jar</packaging>
-    <name>java.util.Currecy j2cl ready</name>
+    <name>java.util.Currency j2cl ready</name>
     <version>1.0-SNAPSHOT</version>
     <description>A custom j2cl compatible Currency</description>
     <url>https://github.com/mP1/java-util-Currency-j2cl</url>
