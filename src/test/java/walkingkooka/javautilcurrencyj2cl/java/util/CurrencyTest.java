@@ -17,10 +17,12 @@
 
 package walkingkooka.javautilcurrencyj2cl.java.util;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import walkingkooka.ToStringTesting;
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
+import walkingkooka.util.SystemProperty;
 
 import java.util.Locale;
 
@@ -30,6 +32,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class CurrencyTest implements ClassTesting<Currency>,
         ToStringTesting<Currency> {
+
+    @BeforeAll
+    public static void beforeJre9Check() {
+        final String version = SystemProperty.JAVA_VERSION.requiredPropertyValue();
+        final String[] versionComponents = version.split("\\.");
+        final int majorVersion = Integer.parseInt(versionComponents[0]);
+        assertEquals(9, majorVersion, () -> "Tests assume JRE 9.x because it makes assumptions based on the number Locales provided with that, version=" + version);
+    }
 
     @Test
     public void testGetInstanceLocaleNullFails() {
