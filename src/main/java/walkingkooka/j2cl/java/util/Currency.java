@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package walkingkooka.javautilcurrencyj2cl.java.util;
+package walkingkooka.j2cl.java.util;
 
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;

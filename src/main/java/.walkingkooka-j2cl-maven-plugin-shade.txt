@@ -1,2 +1,2 @@
-walkingkooka.javautilcurrencyj2cl.java.util=java.util
+walkingkooka.j2cl.java.util=java.util
 

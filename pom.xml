@@ -7,17 +7,17 @@
     <!-- ==================================================================== -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>walkingkooka</groupId>
-    <artifactId>java-util-Currency-j2cl</artifactId>
+    <artifactId>j2cl-java-util-Currency</artifactId>
     <packaging>jar</packaging>
     <name>java.util.Currency j2cl ready</name>
     <version>1.0-SNAPSHOT</version>
     <description>A custom j2cl compatible Currency</description>
-    <url>https://github.com/mP1/java-util-Currency-j2cl</url>
+    <url>https://github.com/mP1/j2cl-java-util-Currency</url>
 
     <!-- ==================================================================== -->
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/mP1/java-util-Currency-j2cl/issues</url>
+        <url>https://github.com/mP1/j2cl-java-util-Currency/issues</url>
     </issueManagement>
     <inceptionYear>2019</inceptionYear>
 
@@ -43,9 +43,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:https://github.com/mP1/java-util-Currency-j2cl.git</connection>
-        <developerConnection>scm:git:https://github.com/mP1/java-util-Currency-j2cl.git</developerConnection>
-        <url>https://github.com/mP1/java-util-Currency-j2cl</url>
+        <connection>scm:git:https://github.com/mP1/j2cl-java-util-Currency.git</connection>
+        <developerConnection>scm:git:https://github.com/mP1/j2cl-java-util-Currency.git</developerConnection>
+        <url>https://github.com/mP1/j2cl-java-util-Currency</url>
         <tag>HEAD</tag>
     </scm>
 
