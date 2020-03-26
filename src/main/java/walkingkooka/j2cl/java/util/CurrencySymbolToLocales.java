@@ -15,7 +15,7 @@
  *
  */
 
-package walkingkooka.javautilcurrencyj2cl.java.util;
+package walkingkooka.j2cl.java.util;
 
 import java.util.Arrays;
 import java.util.Locale;
