@@ -15,7 +15,7 @@
  *
  */
 
-package walkingkooka.j2cl.java.util;
+package walkingkooka.j2cl.java.util.currency;
 
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
