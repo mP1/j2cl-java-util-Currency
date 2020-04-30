@@ -15,7 +15,7 @@
  *
  */
 
-package walkingkooka.j2cl.java.util;
+package walkingkooka.j2cl.java.util.currency;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

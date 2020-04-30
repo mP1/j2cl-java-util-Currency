@@ -20,7 +20,7 @@ Many methods are missing, most of the main getters are available.
 
 ### Transpiling
 
-The `j2cl-maven-plugin` will shade the source during the transpile phase, so `walkingkooka.j2cl.java.util.Currency`
+The `j2cl-maven-plugin` will shade the source during the transpile phase, so `Currency`
 is available in javascript as `java.util.Currency`. 
 
 
