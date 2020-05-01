@@ -19,6 +19,7 @@ package walkingkooka.j2cl.java.util.currency;
 
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;
+import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.printer.IndentingPrinter;
@@ -70,7 +71,7 @@ public final class CurrencyProviderTool {
         final Map<String, Set<Locale>> symbolToLocales = Maps.sorted();
 
         // gather all symbol to locales
-        for (final Locale locale : Locale.getAvailableLocales()) {
+        for (final Locale locale : WalkingkookaLanguageTag.locales()) {
             final String symbol = currencyJre.getSymbol(locale);
             if (symbol.isEmpty()) {
                 continue;
@@ -107,7 +108,11 @@ public final class CurrencyProviderTool {
 
             final Set<Locale> locales = Sets.sorted(CurrencyProviderTool::compareLocaleLanguageTag);
 
-            for (final Locale possible : Locale.getAvailableLocales()) {
+            for (final Locale possible : WalkingkookaLanguageTag.locales()) {
+                if(false == isUnsupported(possible)) {
+                    continue;
+                }
+
                 try {
                     final java.util.Currency possibleCurrency = java.util.Currency.getInstance(possible);
                     if (currency.getCurrencyCode().equals(possibleCurrency.getCurrencyCode())) {
@@ -143,6 +148,10 @@ public final class CurrencyProviderTool {
 
     private static int compareLocaleLanguageTag(final Locale left, final Locale right) {
         return left.toLanguageTag().compareTo(right.toLanguageTag());
+    }
+
+    private static boolean isUnsupported(final Locale locale) {
+        return WalkingkookaLanguageTag.isUnsupported(locale.toLanguageTag());
     }
 
     private static CharSequence quote(final String text) {
