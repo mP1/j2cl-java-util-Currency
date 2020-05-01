@@ -118,11 +118,25 @@
             <artifactId>j2cl-java-util-Locale</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>walkingkooka</groupId>
+            <artifactId>j2cl-java-util-currency-annotation-processor</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <!-- ==================================================================== -->
     <build>
-        <!-- define build -->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -131,7 +145,9 @@
                 <configuration>
                     <source>9</source>
                     <target>9</target>
-                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                    <compilerArgs>
+                        <arg>-Awalkingkooka.j2cl.java.util.Locale=*</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -146,23 +162,27 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
-            <!-- Setup source jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <configuration>
-                    <excludeResources>true</excludeResources>
-                </configuration>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
-                        <phase>package</phase>
                         <goals>
-                            <goal>jar-no-fork</goal>
+                            <goal>install</goal>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <cloneProjectsTo>${project.build.directory}/it-tests</cloneProjectsTo>
+                    <debug>true</debug>
+                    <invokerPropertiesFile>${project.build.directory}/it-repo/invoker.properties</invokerPropertiesFile>
+                    <localRepositoryPath>${project.build.directory}/it-repo</localRepositoryPath>
+                    <settingsFile>src/it/settings.xml</settingsFile>
+                    <streamLogs>false</streamLogs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -208,6 +228,34 @@
                         <scope>compile</scope>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>walkingkooka/j2cl/java/util/currency/CurrencyProvider*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <excludes>
+                        <exclude>walkingkooka/j2cl/java/util/LocaleProvider*</exclude>
+                    </excludes>
+                    <excludeResources>true</excludeResources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <!-- Manage plugin versions -->

@@ -20,11 +20,15 @@ package walkingkooka.j2cl.java.util.currency;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import walkingkooka.ToStringTesting;
+import walkingkooka.collect.set.Sets;
+import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.util.SystemProperty;
 
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -76,7 +80,7 @@ public final class CurrencyTest implements ClassTesting<Currency>,
 
     @Test
     public void testGetInstanceLocaleAllLocales() {
-        for(final Locale locale : Locale.getAvailableLocales()) {
+        for(final Locale locale : WalkingkookaLanguageTag.locales()) {
             // not all Locales have a currency, eg "ar" for arabic doesnt belong to a single country.
 
             java.util.Currency jre;
@@ -112,6 +116,13 @@ public final class CurrencyTest implements ClassTesting<Currency>,
         this.check(java.util.Currency.getInstance("NZD"));
     }
 
+    // https://github.com/mP1/j2cl-java-util-Locale-annotation-processor/issues/14
+    @Test
+    public void testGetInstanceYUMFails() {
+        // YUM has empty locales.
+        assertThrows(IllegalArgumentException.class, () -> walkingkooka.j2cl.java.util.currency.Currency.getInstance("YUM"));
+    }
+
     @Test
     public void testGetInstanceSingletons() {
         final String countryCode = "AUD";
@@ -120,12 +131,35 @@ public final class CurrencyTest implements ClassTesting<Currency>,
 
     @Test
     public void testAllCurrencies() {
-        java.util.Currency.getAvailableCurrencies().forEach(this::check);
+        java.util.Currency.getAvailableCurrencies()
+                .stream()
+                .filter(c -> false == c.getCurrencyCode().startsWith("X"))
+                .filter(c -> {
+                    boolean keep = false;
+
+                    // https://github.com/mP1/j2cl-java-util-Locale-annotation-processor/issues/14
+                    for(final Locale locale : WalkingkookaLanguageTag.locales()) {
+                        try {
+                            if(c.equals(java.util.Currency.getInstance(locale))) {
+                                keep = true;
+                               break;
+                            }
+                        } catch (final Exception fail) {
+
+                        }
+                    }
+
+                    return keep;
+                })
+                .forEach(this::check);
     }
 
     @Test
     public void testAllCurrencies2() {
-        Currency.getAvailableCurrencies().forEach(this::check);
+        Currency.getAvailableCurrencies()
+                .stream()
+                .filter(c -> false == c.getCurrencyCode().equals("XFO"))
+                .forEach(this::check);
     }
 
     @Test
@@ -171,7 +205,7 @@ public final class CurrencyTest implements ClassTesting<Currency>,
         assertEquals(jre.getNumericCode(), emulated.getNumericCode(), "numericCode");
         assertEquals(jre.getNumericCodeAsString(), emulated.getNumericCodeAsString(), "numericCodeAsString");
 
-        for (final Locale locale : Locale.getAvailableLocales()) {
+        for (final Locale locale : WalkingkookaLanguageTag.locales()) {
             this.checkLocale(emulated, jre, locale);
         }
     }

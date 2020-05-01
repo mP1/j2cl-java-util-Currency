@@ -39,3 +39,13 @@ of the github page, or you can make a clone using git:
 ```
 git clone git://github.com/mP1/j2cl-java-util-Currency.git
 ```
+
+
+
+### IDE build setup
+
+Annotation processors from class path must be enabled as some tests test the output of generated classes.
+
+The star/wildcard may need to be escaped with a backslash.
+
+![Intellij -> System Preferences -> Annotation Processors](intellij-enable-annotation-processors.png)
