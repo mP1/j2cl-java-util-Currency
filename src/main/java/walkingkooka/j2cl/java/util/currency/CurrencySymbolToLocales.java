@@ -45,7 +45,7 @@ final class CurrencySymbolToLocales {
     }
 
     final String symbol;
-    final Locale[] locales;
+    private final Locale[] locales;
 
     @Override
     public String toString() {
