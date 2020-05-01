@@ -18,6 +18,7 @@ package walkingkooka.j2cl.java.util.currency;
 
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;
+import walkingkooka.j2cl.locale.LocaleAware;
 import walkingkooka.text.CharSequences;
 
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@LocaleAware
 public final class Currency {
 
     public static Set<Currency> getAvailableCurrencies() {
