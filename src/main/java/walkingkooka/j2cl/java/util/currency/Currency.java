@@ -83,26 +83,19 @@ public final class Currency {
 
     private final static String[] EMPTY_LOCALES = new String[0];
 
-    static {
-        CurrencyProvider.register();
-    }
-
     /**
-     * This factory is called only by {@link CurrencyProvider} and creates and registers all currency constants known to the system.
+     * Requests the CurrencyProvider to provide records which will be used to create {@link Currency} singleton instances.
      */
-    static void register(final String currencyCode,
-                         final int defaultFractionDigits,
-                         final int numericCode,
-                         final String defaultSymbol,
-                         final String locales,
-                         final String... symbolToLocales) {
-        new Currency(currencyCode,
-                defaultFractionDigits,
-                numericCode,
-                defaultSymbol,
-                locales(locales),
-                Arrays.stream(symbolToLocales).map(Currency::symbolToLocales).toArray(CurrencySymbolToLocales[]::new)
-        );
+    static {
+        CurrencyProvider.register((provider) -> {
+            new Currency(provider.currencyCode,
+                    provider.defaultFractionDigits,
+                    provider.numericCode,
+                    provider.defaultSymbol,
+                    locales(provider.locales),
+                    Arrays.stream(provider.symbolToLocales).map(Currency::symbolToLocales).toArray(CurrencySymbolToLocales[]::new)
+            );
+        });
     }
 
     private static String[] locales(final String locales) {
