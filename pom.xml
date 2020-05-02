@@ -234,6 +234,7 @@
                 <configuration>
                     <excludes>
                         <exclude>walkingkooka/j2cl/java/util/currency/CurrencyProvider*</exclude>
+                        <exclude>walkingkooka/j2cl/java/util/locale/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
