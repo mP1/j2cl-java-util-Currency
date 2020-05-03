@@ -8,13 +8,14 @@
 
 #  j2cl java.util.Locale
 
-This project aims to provide a more complete `java.util.Currency` sourcing locale sensitive data from a tool that queries the JRE.
+This project aims to provide a more complete `java.util.Currency` sourcing locale sensitive data at build time using
+an [annotation processor](https://github.com/mP1/j2cl-java-util-Currency).
 
-
-
-### Missing functionality
-
-Many methods are missing, most of the main getters are available.
+- Only `java.util.Currency` instances that may be retrieved with a `java.util.Locale` may be bundled with one exception.
+- See [j2cl-java-util-currency-annotation-processor](https://github.com/mP1/j2cl-java-util-Currency) for more info about selecting which currencies get bundled.
+- A special case of the Currency with currency code `XXX` is made because it is required by `java.text.DecimalFormatSymbols`.
+- Support for selecting currencies at build time by currency code is [planned](https://github.com/mP1/j2cl-java-util-currency-annotation-processor/issues/16).
+- Serialization is not supported, and all support classes and forms including magic methods such as `writeReplace` are removed.
 
 
 
@@ -22,12 +23,6 @@ Many methods are missing, most of the main getters are available.
 
 The `j2cl-maven-plugin` will shade the source during the transpile phase, so `Currency`
 is available in javascript as `java.util.Currency`. 
-
-
-
-### Serialization
-
-Serialization is not supported, and all support classes and forms including magic methods such as `writeReplace` are removed.
 
 
 
