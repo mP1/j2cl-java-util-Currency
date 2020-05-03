@@ -12,7 +12,7 @@ This project aims to provide a more complete `java.util.Currency` sourcing local
 an [annotation processor](https://github.com/mP1/j2cl-java-util-Currency).
 
 - Only `java.util.Currency` instances that may be retrieved with a `java.util.Locale` may be bundled with one exception.
-- See [j2cl-java-util-currency-annotation-processor](https://github.com/mP1/j2cl-java-util-Currency) for more info about selecting which currencies get bundled.
+- See [j2cl-java-util-currency-annotation-processor](https://github.com/mP1/j2cl-java-util-currency-annotation-processor) for more info about selecting which currencies get bundled.
 - A special case of the Currency with currency code `XXX` is made because it is required by `java.text.DecimalFormatSymbols`.
 - Support for selecting currencies at build time by currency code is [planned](https://github.com/mP1/j2cl-java-util-currency-annotation-processor/issues/16).
 - Serialization is not supported, and all support classes and forms including magic methods such as `writeReplace` are removed.
