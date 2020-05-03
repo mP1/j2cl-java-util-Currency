@@ -30,15 +30,15 @@ public class JunitTest {
 
     @Test
     public void testENAU() {
-        this.getCurrenyAndCheckCurrencyCode("EN-AU", "AUD");
+        this.getCurrencyAndCheckCurrencyCode("EN-AU", "AUD");
     }
 
     @Test
     public void testENNZ() {
-        this.getCurrenyAndCheckCurrencyCode("EN-NZ", "NZD");
+        this.getCurrencyAndCheckCurrencyCode("EN-NZ", "NZD");
     }
 
-    private void getCurrenyAndCheckCurrencyCode(final String locale, final String currencyCode) {
+    private void getCurrencyAndCheckCurrencyCode(final String locale, final String currencyCode) {
         final Currency currency = Currency.getInstance(Locale.forLanguageTag(locale));
         Assert.assertEquals(currencyCode, currency.getCurrencyCode());
     }
