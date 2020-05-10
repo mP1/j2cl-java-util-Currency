@@ -18,10 +18,12 @@ package walkingkooka.j2cl.java.util.currency;
 
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;
+import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
 import walkingkooka.j2cl.locale.LocaleAware;
 import walkingkooka.text.CharSequences;
 
-import java.util.Arrays;
+import java.io.DataInput;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -84,36 +86,67 @@ public final class Currency {
     private final static String[] EMPTY_LOCALES = new String[0];
 
     /**
-     * Requests the CurrencyProvider to provide records which will be used to create {@link Currency} singleton instances.
+     * Consumes {@link CurrencyProvider#DATA} creating a {@link Currency} for each record.
      */
     static {
-        CurrencyProvider.register((provider) -> {
-            new Currency(provider.currencyCode,
-                    provider.defaultFractionDigits,
-                    provider.numericCode,
-                    provider.defaultSymbol,
-                    locales(provider.locales),
-                    Arrays.stream(provider.symbolToLocales).map(Currency::symbolToLocales).toArray(CurrencySymbolToLocales[]::new)
-            );
-        });
-    }
-
-    private static String[] locales(final String locales) {
-        return locales.isEmpty() ?
-                EMPTY_LOCALES :
-                locales.split(",");
+        try {
+            register(StringDataInputDataOutput.input(CurrencyProvider.DATA));
+        } catch (final IOException cause) {
+            throw new Error(cause);
+        }
     }
 
     /**
-     * Factory called by the generated code above to construct a {@link CurrencySymbolToLocales}.
-     * Allows the generated code to use String literals holding locales rather than an array with many inlined new Locale calls.
+     * Intended to only be called by the static init above. A test exists to verify the {@link DataInput} is consumed
+     * and further operations will fail with an {@link java.io.EOFException}.
      */
-    private static CurrencySymbolToLocales symbolToLocales(final String symbolAndLocales) {
-        final String[] tokens = symbolAndLocales.split(",");
-        return CurrencySymbolToLocales.with(tokens[0],
-                Arrays.stream(tokens, 1, tokens.length)
-                        .map(Locale::forLanguageTag)
-                        .toArray(Locale[]::new));
+    static void register(final DataInput data) throws IOException {
+        final int count = data.readInt();
+
+        for (int i = 0; i < count; i++) {
+            final String currencyCode = data.readUTF();
+            final int defaultFractionDigits = data.readInt();
+            final int numericCode = data.readInt();
+            final String defaultSymbol = data.readUTF();
+            final String[] locales = readLocales(data);
+            final CurrencySymbolToLocales[] symbolToLocales = readSymbolToLocales(data);
+
+            new Currency(currencyCode,
+                    defaultFractionDigits,
+                    numericCode,
+                    defaultSymbol,
+                    locales,
+                    symbolToLocales);
+        }
+    }
+
+    private static String[] readLocales(final DataInput data) throws IOException {
+        final int count = data.readInt();
+        final String[] locales = new String[count];
+        for (int i = 0; i < count; i++) {
+            locales[i] = data.readUTF();
+        }
+
+        return locales;
+    }
+
+    private static CurrencySymbolToLocales[] readSymbolToLocales(final DataInput data) throws IOException {
+        final int symbolToLocaleCount = data.readInt();
+        final CurrencySymbolToLocales[] symbolToLocales = new CurrencySymbolToLocales[symbolToLocaleCount];
+
+        for (int i = 0; i < symbolToLocaleCount; i++) {
+            final String symbol = data.readUTF();
+
+            final int localeCount = data.readInt();
+            final Locale[] locales = new Locale[localeCount];
+            for (int j = 0; j < localeCount; j++) {
+                locales[j] = Locale.forLanguageTag(data.readUTF());
+            }
+
+            symbolToLocales[i] = CurrencySymbolToLocales.with(symbol, locales);
+        }
+
+        return symbolToLocales;
     }
 
     /**
