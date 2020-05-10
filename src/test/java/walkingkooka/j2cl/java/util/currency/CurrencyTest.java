@@ -20,15 +20,15 @@ package walkingkooka.j2cl.java.util.currency;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import walkingkooka.ToStringTesting;
-import walkingkooka.collect.set.Sets;
+import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.reflect.ClassTesting;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.util.SystemProperty;
 
+import java.io.DataInput;
+import java.io.EOFException;
 import java.util.Locale;
-import java.util.Set;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -43,6 +43,19 @@ public final class CurrencyTest implements ClassTesting<Currency>,
         final String[] versionComponents = version.split("\\.");
         final int majorVersion = Integer.parseInt(versionComponents[0]);
         assertEquals(9, majorVersion, () -> "Tests assume JRE 9.x because it makes assumptions based on the number Locales provided with that, version=" + version);
+    }
+
+    @Test
+    public void testRegisterThenDataInputThrowsEOF() throws Exception {
+        final String dataString = CurrencyProvider.DATA;
+        try {
+            final DataInput data = StringDataInputDataOutput.input(dataString);
+            Currency.register(data);
+            assertThrows(EOFException.class, () -> data.readBoolean(), dataString);
+        } catch (final Exception rethrow) {
+            System.err.println(dataString);
+            throw rethrow;
+        }
     }
 
     @Test
