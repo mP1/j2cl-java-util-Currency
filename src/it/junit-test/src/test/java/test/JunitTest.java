@@ -43,6 +43,13 @@ public class JunitTest {
         Assert.assertEquals(currencyCode, currency.getCurrencyCode());
     }
 
+    @Test
+    public void testCurrencyCodeXXX() {
+        final String currencyCode = "XXX";
+        final Currency currency = Currency.getInstance(currencyCode);
+        Assert.assertEquals(currencyCode, currency.getCurrencyCode());
+    }
+
 //    @Test
 //    public void testEURCurrencyCodeAbsent() {
 //        Assert.assertEquals(Lists.empty(), Currency.getAvailableCurrencies()

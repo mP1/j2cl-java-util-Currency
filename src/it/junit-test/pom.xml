@@ -199,6 +199,7 @@
                                 <param>PRETTY_PRINT</param>
                             </formatting>
                             <java-compiler-arguments>
+                                <param>-Awalkingkooka.j2cl.java.util.Currency=XXX</param>
                                 <param>-Awalkingkooka.j2cl.java.util.Locale=EN*</param>
                             </java-compiler-arguments>
                             <language-out>ECMASCRIPT_2016</language-out>
