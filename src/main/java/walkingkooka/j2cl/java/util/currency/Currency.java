@@ -83,8 +83,6 @@ public final class Currency {
      */
     private final static Map<String, Currency> CODE_TO_CURRENCY = Maps.sorted();
 
-    private final static String[] EMPTY_LOCALES = new String[0];
-
     /**
      * Consumes {@link CurrencyProvider#DATA} creating a {@link Currency} for each record.
      */
