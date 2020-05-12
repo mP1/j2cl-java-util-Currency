@@ -16,6 +16,12 @@ an [annotation processor](https://github.com/mP1/j2cl-java-util-currency-annotat
 - Serialization is not supported, and all support classes and forms including magic methods such as `writeReplace` are removed.
 
 
+## Missing/Unsupported APIs
+
+- getDisplayName (all overloads) are not supported. This would require considerable data due to localization.
+
+
+
 
 ### Transpiling
 
