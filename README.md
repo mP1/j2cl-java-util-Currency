@@ -11,9 +11,15 @@
 This project aims to provide a more complete `java.util.Currency` sourcing locale sensitive data at build time using
 an [annotation processor](https://github.com/mP1/j2cl-java-util-currency-annotation-processor).
 
-- See [j2cl-java-util-currency-annotation-processor](https://github.com/mP1/j2cl-java-util-currency-annotation-processor)
-  for info about selecting currencies using locales and currency codes.
 - Serialization is not supported, and all support classes and forms including magic methods such as `writeReplace` are removed.
+
+
+
+## Annotation processor arguments
+
+- See [j2cl-java-util-currency-annotation-processor](https://github.com/mP1/j2cl-java-util-locale-annotation-processor) for more info about selecting which currencies get bundled.
+- See [j2cl-java-util-locale-annotation-processor](https://github.com/mP1/j2cl-java-util-locale-annotation-processor) for more info about selecting which locales get bundled.
+- See [j2cl-locale](https://github.com/mP1/j2cl-locale) for more info about logging.
 
 
 ## Missing/Unsupported APIs
