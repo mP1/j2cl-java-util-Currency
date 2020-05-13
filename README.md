@@ -24,6 +24,8 @@ an [annotation processor](https://github.com/mP1/j2cl-java-util-currency-annotat
 
 ## Missing/Unsupported APIs
 
+`java.util.Currency`
+
 - getDisplayName (all overloads) are not supported. This would require considerable data due to localization.
 
 
