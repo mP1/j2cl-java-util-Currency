@@ -16,14 +16,18 @@
  */
 package walkingkooka.j2cl.java.util.currency;
 
+import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;
 import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
+import walkingkooka.j2cl.java.util.locale.support.MultiLocaleValue;
 import walkingkooka.j2cl.locale.LocaleAware;
+import walkingkooka.predicate.Predicates;
 import walkingkooka.text.CharSequences;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -107,7 +111,9 @@ public final class Currency {
             final int numericCode = data.readInt();
             final String defaultSymbol = data.readUTF();
             final String[] locales = readLocales(data);
-            final CurrencySymbolToLocales[] symbolToLocales = readSymbolToLocales(data);
+
+            final List<MultiLocaleValue<String>> symbolToLocales = readSymbolToLocales(data);
+            symbolToLocales.add(MultiLocaleValue.with(defaultSymbol, Predicates.always()));
 
             new Currency(currencyCode,
                     defaultFractionDigits,
@@ -128,20 +134,20 @@ public final class Currency {
         return locales;
     }
 
-    private static CurrencySymbolToLocales[] readSymbolToLocales(final DataInput data) throws IOException {
+    private static List<MultiLocaleValue<String>> readSymbolToLocales(final DataInput data) throws IOException {
         final int symbolToLocaleCount = data.readInt();
-        final CurrencySymbolToLocales[] symbolToLocales = new CurrencySymbolToLocales[symbolToLocaleCount];
+        final List<MultiLocaleValue<String>> symbolToLocales = Lists.array();
 
         for (int i = 0; i < symbolToLocaleCount; i++) {
             final String symbol = data.readUTF();
 
             final int localeCount = data.readInt();
-            final Locale[] locales = new Locale[localeCount];
+            final List<Locale> locales = Lists.array();
             for (int j = 0; j < localeCount; j++) {
-                locales[j] = Locale.forLanguageTag(data.readUTF());
+                locales.add(Locale.forLanguageTag(data.readUTF()));
             }
 
-            symbolToLocales[i] = CurrencySymbolToLocales.with(symbol, locales);
+            symbolToLocales.add(MultiLocaleValue.with(symbol, locales::contains));
         }
 
         return symbolToLocales;
@@ -155,7 +161,7 @@ public final class Currency {
                      final int numericCode,
                      final String defaultSymbol,
                      final String[] locales,
-                     final CurrencySymbolToLocales... symbolToLocales) {
+                     final List<MultiLocaleValue<String>> symbolToLocales) {
         super();
         this.currencyCode = currencyCode;
         this.defaultFractionDigits = defaultFractionDigits;
@@ -186,23 +192,10 @@ public final class Currency {
 
         return locale.toLanguageTag().equals("und") ?
                 this.defaultSymbol :
-                getSymbol0(locale);
+                MultiLocaleValue.findValue(this.symbolToLocales, locale);
     }
 
-    private String getSymbol0(final Locale locale) {
-        String symbol = this.defaultSymbol;
-
-        for (final CurrencySymbolToLocales symbolAndLocales : this.symbolToLocales) {
-            if (symbolAndLocales.contains(locale)) {
-                symbol = symbolAndLocales.symbol;
-                break;
-            }
-        }
-
-        return symbol;
-    }
-
-    private final CurrencySymbolToLocales[] symbolToLocales;
+    private final List<MultiLocaleValue<String>> symbolToLocales;
 
     private final String defaultSymbol;
 
