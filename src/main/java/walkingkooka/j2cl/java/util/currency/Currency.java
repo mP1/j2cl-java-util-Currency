@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 @LocaleAware
@@ -70,10 +71,22 @@ public final class Currency {
         checkLocale(locale);
 
         final String languageTag = locale.toLanguageTag();
-        final Currency currency = LOCALE_TO_CURRENCY.get(languageTag.equals("nn-NO") ? "no-NO" : languageTag);
+
+        Currency currency = LOCALE_TO_CURRENCY.get(languageTag.equals("nn-NO") ?
+                "no-NO" :
+                languageTag);
+        if (null == currency) {
+            final Optional<Locale> alternative = LocaleSupport.alternatives(locale,
+                    LocaleSupport.IGNORE_NORWAY); // the old and new no related locales give different symbols
+            if (alternative.isPresent()) {
+                currency = LOCALE_TO_CURRENCY.get(alternative.get().toLanguageTag());
+            }
+        }
+
         if (null == currency) {
             throw new IllegalArgumentException("No currency available for " + CharSequences.quote(languageTag) + " " + locale);
         }
+
         return currency;
     }
 
@@ -114,7 +127,7 @@ public final class Currency {
             final Set<Locale> locales = LocaleSupport.readLocales(data);
 
             final List<MultiLocaleValue<String>> symbolToLocales = readSymbolToLocales(data);
-            symbolToLocales.add(MultiLocaleValue.with(defaultSymbol, Predicates.always()));
+            symbolToLocales.add(MultiLocaleValue.with(defaultSymbol, Predicates.always(), LocaleSupport.IGNORE_NORWAY));
 
             new Currency(currencyCode,
                     defaultFractionDigits,
@@ -133,7 +146,8 @@ public final class Currency {
             final String symbol = data.readUTF();
 
             symbolToLocales.add(MultiLocaleValue.with(symbol,
-                    LocaleSupport.readLocales(data)::contains));
+                    LocaleSupport.readLocales(data)::contains,
+                    LocaleSupport.IGNORE_NORWAY));
         }
 
         return symbolToLocales;
