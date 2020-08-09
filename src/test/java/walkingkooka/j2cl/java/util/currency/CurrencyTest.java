@@ -22,19 +22,25 @@ import org.junit.jupiter.api.Test;
 import walkingkooka.ToStringTesting;
 import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
-import walkingkooka.reflect.ClassTesting;
-import walkingkooka.reflect.JavaVisibility;
+import walkingkooka.javashader.ShadedClassTesting;
+import walkingkooka.predicate.Predicates;
+import walkingkooka.reflect.PackageName;
 import walkingkooka.util.SystemProperty;
 
 import java.io.DataInput;
 import java.io.EOFException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class CurrencyTest implements ClassTesting<Currency>,
+public final class CurrencyTest implements ShadedClassTesting<Currency>,
         ToStringTesting<Currency> {
 
     @BeforeAll
@@ -258,8 +264,26 @@ public final class CurrencyTest implements ClassTesting<Currency>,
         return Currency.class;
     }
 
+    // ShadedClassTesting................................................................................................
+
     @Override
-    public JavaVisibility typeVisibility() {
-        return JavaVisibility.PUBLIC;
+    public final Predicate<Constructor> requiredConstructors() {
+        return Predicates.always();
+    }
+
+    @Override
+    public final Predicate<Method> requiredMethods() {
+        return Predicates.always();
+    }
+
+    @Override
+    public final Predicate<Field> requiredFields() {
+        return Predicates.always();
+    }
+
+    @Override
+    public UnaryOperator<Class<?>> typeMapper() {
+        return ShadedClassTesting.typeMapper(PackageName.from(this.getClass().getPackage()),
+                PackageName.from(java.util.Currency.class.getPackage()));
     }
 }
