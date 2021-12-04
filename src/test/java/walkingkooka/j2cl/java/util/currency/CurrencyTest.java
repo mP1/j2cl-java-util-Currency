@@ -48,6 +48,7 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
         final String version = SystemProperty.JAVA_VERSION.requiredPropertyValue();
         final String[] versionComponents = version.split("\\.");
         final int majorVersion = Integer.parseInt(versionComponents[0]);
+
         assertEquals(9, majorVersion, () -> "Tests assume JRE 9.x because it makes assumptions based on the number Locales provided with that, version=" + version);
     }
 
@@ -86,14 +87,14 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
     @Test
     public void testGetInstanceLocaleNnNo() {
         final Locale locale = Locale.forLanguageTag("nn-NO");
-        assertEquals("NO", locale.getCountry(), "country");
+        this.checkEquals("NO", locale.getCountry(), "country");
         this.check(Currency.getInstance(locale), java.util.Currency.getInstance(locale));
     }
 
     @Test
     public void testGetInstanceLocaleNoNoNy() {
         final Locale locale = Locale.forLanguageTag("no-NO-NY");
-        assertEquals("NO", locale.getCountry(), "country");
+        this.checkEquals("NO", locale.getCountry(), "country");
         this.check(Currency.getInstance(locale), java.util.Currency.getInstance(locale));
     }
 
@@ -219,10 +220,10 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
 
     private void check(final Currency emulated,
                        final java.util.Currency jre) {
-        assertEquals(jre.getCurrencyCode(), emulated.getCurrencyCode(), "currencyCode");
-        assertEquals(jre.getDefaultFractionDigits(), emulated.getDefaultFractionDigits(), "defaultFractionDigits");
-        assertEquals(jre.getNumericCode(), emulated.getNumericCode(), "numericCode");
-        assertEquals(jre.getNumericCodeAsString(), emulated.getNumericCodeAsString(), "numericCodeAsString");
+        this.checkEquals(jre.getCurrencyCode(), emulated.getCurrencyCode(), "currencyCode");
+        this.checkEquals(jre.getDefaultFractionDigits(), emulated.getDefaultFractionDigits(), "defaultFractionDigits");
+        this.checkEquals(jre.getNumericCode(), emulated.getNumericCode(), "numericCode");
+        this.checkEquals(jre.getNumericCodeAsString(), emulated.getNumericCodeAsString(), "numericCodeAsString");
 
         for (final Locale locale : WalkingkookaLanguageTag.locales()) {
             this.checkLocale(emulated, jre, locale);
@@ -243,7 +244,7 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
         if (invalidLocale) {
             assertThrows(NullPointerException.class, () -> emulated.getSymbol(locale));
         } else {
-            assertEquals(jre.getSymbol(locale),
+            this.checkEquals(jre.getSymbol(locale),
                     emulated.getSymbol(locale),
                     () -> jre + " getSymbol for locale.languageTag: " + locale.toLanguageTag() + " Locale.language: " + locale.getLanguage() + " Locale.country: " + locale.getCountry() + " Locale.toString " + locale);
         }
