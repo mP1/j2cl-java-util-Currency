@@ -101,9 +101,7 @@ public final class Currency {
      */
     private final static Map<String, Currency> CODE_TO_CURRENCY = Maps.sorted();
 
-    /**
-     * Consumes {@link CurrencyProvider#DATA} creating a {@link Currency} for each record.
-     */
+     // Consumes {@link CurrencyProvider#DATA} creating a {@link Currency} for each record.
     static {
         try {
             register(StringDataInputDataOutput.input(CurrencyProvider.DATA));
