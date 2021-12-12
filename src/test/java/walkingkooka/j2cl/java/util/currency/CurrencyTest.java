@@ -268,17 +268,17 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
     // ShadedClassTesting................................................................................................
 
     @Override
-    public final Predicate<Constructor> requiredConstructors() {
+    public Predicate<Constructor> requiredConstructors() {
         return Predicates.always();
     }
 
     @Override
-    public final Predicate<Method> requiredMethods() {
+    public Predicate<Method> requiredMethods() {
         return Predicates.always();
     }
 
     @Override
-    public final Predicate<Field> requiredFields() {
+    public Predicate<Field> requiredFields() {
         return Predicates.always();
     }
 
