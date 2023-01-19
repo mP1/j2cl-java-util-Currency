@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import walkingkooka.ToStringTesting;
 import walkingkooka.j2cl.java.io.string.StringDataInputDataOutput;
+import walkingkooka.j2cl.java.util.currency.generated.CurrencyProvider;
 import walkingkooka.j2cl.locale.WalkingkookaLanguageTag;
 import walkingkooka.javashader.ShadedClassTesting;
 import walkingkooka.predicate.Predicates;
@@ -268,7 +269,7 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
     // ShadedClassTesting................................................................................................
 
     @Override
-    public Predicate<Constructor> requiredConstructors() {
+    public Predicate<Constructor<?>> requiredConstructors() {
         return Predicates.always();
     }
 
