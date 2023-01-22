@@ -87,7 +87,7 @@
     <dependencies>
         <dependency>
             <groupId>walkingkooka</groupId>
-            <artifactId>j2cl-java-util-Currency-annotation-processor</artifactId>
+            <artifactId>j2cl-java-util-currency-annotation-processor</artifactId>
             <version>1.0-SNAPSHOT</version>
 
             <exclusions>
