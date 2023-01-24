@@ -157,6 +157,7 @@
                     <compilerArgs>
                         <arg>-Awalkingkooka.j2cl.java.util.Currency=XXX</arg>
                         <arg>-Awalkingkooka.j2cl.java.util.Locale=*</arg>
+                        <arg>-Awalkingkooka.j2cl.java.util.Locale.DEFAULT=en-AU</arg>
                         <arg>-Awalkingkooka.j2cl.locale.Logging=SLASH_SLASH_COMMENTS</arg>
                     </compilerArgs>
                     <showWarnings>true</showWarnings>
