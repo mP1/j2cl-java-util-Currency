@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
-  <inherits name="java.util.Locale"/>
+  <inherits name="walkingkooka.j2cl.java.util.locale.Locale"/>
 </module>
