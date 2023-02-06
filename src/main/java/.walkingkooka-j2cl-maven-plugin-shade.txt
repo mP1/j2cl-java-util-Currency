@@ -1,2 +1,3 @@
+walkingkooka.j2cl.java.util.currency.generated=walkingkooka.j2cl.java.util.currency.generated
 walkingkooka.j2cl.java.util.currency=java.util
 
