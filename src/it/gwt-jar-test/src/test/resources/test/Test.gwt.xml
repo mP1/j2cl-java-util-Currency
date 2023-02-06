@@ -17,7 +17,6 @@
   -->
 
 <module>
-    <inherits name="walkingkooka.j2cl.java.util.locale.Locale"/>
+    <inherits name="walkingkooka.j2cl.java.util.currency.Currency"/>
     <source path=""/>
-    <super-source path="super"/>
 </module>
