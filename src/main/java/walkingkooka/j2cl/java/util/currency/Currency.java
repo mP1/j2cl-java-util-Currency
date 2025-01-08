@@ -74,11 +74,11 @@ public final class Currency {
         final String languageTag = locale.toLanguageTag();
 
         Currency currency = LOCALE_TO_CURRENCY.get(languageTag.equals("nn-NO") ?
-                "no-NO" :
-                languageTag);
+            "no-NO" :
+            languageTag);
         if (null == currency) {
             final Optional<Locale> alternative = LocaleSupport.alternatives(locale,
-                    LocaleSupport.IGNORE_NORWAY); // the old and new no related locales give different symbols
+                LocaleSupport.IGNORE_NORWAY); // the old and new no related locales give different symbols
             if (alternative.isPresent()) {
                 currency = LOCALE_TO_CURRENCY.get(alternative.get().toLanguageTag());
             }
@@ -102,7 +102,7 @@ public final class Currency {
      */
     private final static Map<String, Currency> CODE_TO_CURRENCY = Maps.sorted();
 
-     // Consumes {@link CurrencyProvider#DATA} creating a {@link Currency} for each record.
+    // Consumes {@link CurrencyProvider#DATA} creating a {@link Currency} for each record.
     static {
         try {
             register(StringDataInputDataOutput.input(CurrencyProvider.DATA));
@@ -129,11 +129,11 @@ public final class Currency {
             symbolToLocales.add(MultiLocaleValue.with(defaultSymbol, Predicates.always(), LocaleSupport.IGNORE_NORWAY));
 
             new Currency(currencyCode,
-                    defaultFractionDigits,
-                    numericCode,
-                    defaultSymbol,
-                    locales,
-                    symbolToLocales);
+                defaultFractionDigits,
+                numericCode,
+                defaultSymbol,
+                locales,
+                symbolToLocales);
         }
     }
 
@@ -145,8 +145,8 @@ public final class Currency {
             final String symbol = data.readUTF();
 
             symbolToLocales.add(MultiLocaleValue.with(symbol,
-                    LocaleSupport.readLocales(data)::contains,
-                    LocaleSupport.IGNORE_NORWAY));
+                LocaleSupport.readLocales(data)::contains,
+                LocaleSupport.IGNORE_NORWAY));
         }
 
         return symbolToLocales;
@@ -190,8 +190,8 @@ public final class Currency {
         checkLocale(locale);
 
         return locale.toLanguageTag().equals("und") ?
-                this.defaultSymbol :
-                MultiLocaleValue.findValue(this.symbolToLocales, locale);
+            this.defaultSymbol :
+            MultiLocaleValue.findValue(this.symbolToLocales, locale);
     }
 
     private final List<MultiLocaleValue<String>> symbolToLocales;
@@ -217,10 +217,10 @@ public final class Currency {
     public String getNumericCodeAsString() {
         final int code = this.numericCode;
         return code < 100 ?
-                code < 10 ?
-                        "00" + code :
-                        "0" + code :
-                String.valueOf(code);
+            code < 10 ?
+                "00" + code :
+                "0" + code :
+            String.valueOf(code);
     }
 
     private final int numericCode;

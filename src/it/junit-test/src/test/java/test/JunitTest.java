@@ -24,7 +24,6 @@ import java.util.Currency;
 import java.util.Locale;
 
 
-
 @J2clTestInput(JunitTest.class)
 public class JunitTest {
 

@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class CurrencyTest implements ShadedClassTesting<Currency>,
-        ToStringTesting<Currency> {
+    ToStringTesting<Currency> {
 
     @BeforeAll
     public static void beforeJre9Check() {
@@ -68,7 +68,7 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
 
     @Test
     public void testGetInstanceLocaleNullFails() {
-        assertThrows(NullPointerException.class, () -> Currency.getInstance((Locale)null));
+        assertThrows(NullPointerException.class, () -> Currency.getInstance((Locale) null));
     }
 
     @Test
@@ -101,7 +101,7 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
 
     @Test
     public void testGetInstanceLocaleAllLocales() {
-        for(final Locale locale : WalkingkookaLanguageTag.locales()) {
+        for (final Locale locale : WalkingkookaLanguageTag.locales()) {
             // not all Locales have a currency, eg "ar" for arabic doesnt belong to a single country.
 
             java.util.Currency jre;
@@ -111,7 +111,7 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
                 jre = null;
             }
 
-            if(null!=jre) {
+            if (null != jre) {
                 this.check(Currency.getInstance(locale), jre);
             }
         }
@@ -119,7 +119,7 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
 
     @Test
     public void testGetInstanceStringNullFails() {
-        assertThrows(NullPointerException.class, () -> Currency.getInstance((String)null));
+        assertThrows(NullPointerException.class, () -> Currency.getInstance((String) null));
     }
 
     @Test
@@ -153,62 +153,62 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
     @Test
     public void testAllCurrencies() {
         java.util.Currency.getAvailableCurrencies()
-                .stream()
-                .filter(c -> false == c.getCurrencyCode().startsWith("X"))
-                .filter(c -> {
-                    boolean keep = false;
+            .stream()
+            .filter(c -> false == c.getCurrencyCode().startsWith("X"))
+            .filter(c -> {
+                boolean keep = false;
 
-                    // https://github.com/mP1/j2cl-java-util-Locale-annotation-processor/issues/14
-                    for(final Locale locale : WalkingkookaLanguageTag.locales()) {
-                        try {
-                            if(c.equals(java.util.Currency.getInstance(locale))) {
-                                keep = true;
-                               break;
-                            }
-                        } catch (final Exception fail) {
-
+                // https://github.com/mP1/j2cl-java-util-Locale-annotation-processor/issues/14
+                for (final Locale locale : WalkingkookaLanguageTag.locales()) {
+                    try {
+                        if (c.equals(java.util.Currency.getInstance(locale))) {
+                            keep = true;
+                            break;
                         }
-                    }
+                    } catch (final Exception fail) {
 
-                    return keep;
-                })
-                .forEach(this::check);
+                    }
+                }
+
+                return keep;
+            })
+            .forEach(this::check);
     }
 
     @Test
     public void testAllCurrencies2() {
         Currency.getAvailableCurrencies()
-                .stream()
-                .filter(c -> false == c.getCurrencyCode().equals("XFO"))
-                .forEach(this::check);
+            .stream()
+            .filter(c -> false == c.getCurrencyCode().equals("XFO"))
+            .forEach(this::check);
     }
 
     @Test
     public void testGetSymbolAud_ar_jo() {
         this.checkLocale(Currency.getInstance("AUD"),
-                java.util.Currency.getInstance("AUD"),
-                Locale.forLanguageTag("ar-JO"));
+            java.util.Currency.getInstance("AUD"),
+            Locale.forLanguageTag("ar-JO"));
     }
 
     @Test
     public void testGetSymbolAud_nn() {
         this.checkLocale(Currency.getInstance("AUD"),
-                java.util.Currency.getInstance("AUD"),
-                Locale.forLanguageTag("nn"));
+            java.util.Currency.getInstance("AUD"),
+            Locale.forLanguageTag("nn"));
     }
 
     @Test
     public void testGetSymbolNOK_nn_NO() {
         this.checkLocale(Currency.getInstance("NOK"),
-                java.util.Currency.getInstance("NOK"),
-                Locale.forLanguageTag("nn-NO"));
+            java.util.Currency.getInstance("NOK"),
+            Locale.forLanguageTag("nn-NO"));
     }
 
     @Test
     public void testGetSymbolUnknownLocale() {
         this.checkLocale(Currency.getInstance("AUD"),
-                java.util.Currency.getInstance("AUD"),
-                Locale.forLanguageTag("qrstuv"));
+            java.util.Currency.getInstance("AUD"),
+            Locale.forLanguageTag("qrstuv"));
     }
 
     private void check(final Currency currency) {
@@ -246,8 +246,8 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
             assertThrows(NullPointerException.class, () -> emulated.getSymbol(locale));
         } else {
             this.checkEquals(jre.getSymbol(locale),
-                    emulated.getSymbol(locale),
-                    () -> jre + " getSymbol for locale.languageTag: " + locale.toLanguageTag() + " Locale.language: " + locale.getLanguage() + " Locale.country: " + locale.getCountry() + " Locale.toString " + locale);
+                emulated.getSymbol(locale),
+                () -> jre + " getSymbol for locale.languageTag: " + locale.toLanguageTag() + " Locale.language: " + locale.getLanguage() + " Locale.country: " + locale.getCountry() + " Locale.toString " + locale);
         }
     }
 
@@ -286,6 +286,6 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
     @Override
     public UnaryOperator<Class<?>> typeMapper() {
         return ShadedClassTesting.typeMapper(PackageName.from(this.getClass().getPackage()),
-                PackageName.from(java.util.Currency.class.getPackage()));
+            PackageName.from(java.util.Currency.class.getPackage()));
     }
 }
