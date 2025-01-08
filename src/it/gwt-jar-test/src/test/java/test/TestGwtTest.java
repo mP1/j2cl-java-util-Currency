@@ -33,19 +33,19 @@ public class TestGwtTest extends GWTTestCase {
 
     public void testAssertEquals() {
         assertEquals(
-                1,
-                1
+            1,
+            1
         );
     }
 
     public void testAu() {
         final Currency currency = Currency.getInstance(
-                Locale.forLanguageTag("EN-AU")
+            Locale.forLanguageTag("EN-AU")
         );
 
         assertEquals(
-                "AUD",
-                currency.getCurrencyCode()
+            "AUD",
+            currency.getCurrencyCode()
         );
     }
 }
