@@ -45,12 +45,16 @@ public final class CurrencyTest implements ShadedClassTesting<Currency>,
     ToStringTesting<Currency> {
 
     @BeforeAll
-    public static void beforeJre9Check() {
+    public static void beforeJre11Check() {
         final String version = SystemProperty.JAVA_VERSION.requiredPropertyValue();
         final String[] versionComponents = version.split("\\.");
         final int majorVersion = Integer.parseInt(versionComponents[0]);
 
-        assertEquals(9, majorVersion, () -> "Tests assume JRE 9.x because it makes assumptions based on the number Locales provided with that, version=" + version);
+        assertEquals(
+            11,
+            majorVersion,
+            () -> "Tests assume JRE 11.x because it makes assumptions based on the number Locales provided with that, version=" + version
+        );
     }
 
     @Test
