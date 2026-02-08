@@ -6,8 +6,6 @@
 ![](https://tokei.rs/b1/github/mP1/j2cl-java-util-Currency)
 [![J2CL compatible](https://img.shields.io/badge/J2CL-compatible-brightgreen.svg)](https://github.com/mP1/j2cl-central)
 
-
-
 #  j2cl java.util.Currency
 
 This project aims to provide a more complete `java.util.Currency` sourcing locale sensitive data at build time using
@@ -15,14 +13,11 @@ an [annotation processor](https://github.com/mP1/j2cl-java-util-currency-annotat
 
 - Serialization is not supported, and all support classes and forms including magic methods such as `writeReplace` are removed.
 
-
-
 ## Annotation processor arguments
 
 - See [j2cl-java-util-currency-annotation-processor](https://github.com/mP1/j2cl-java-util-locale-annotation-processor) for more info about selecting which currencies get bundled.
 - See [j2cl-java-util-locale-annotation-processor](https://github.com/mP1/j2cl-java-util-locale-annotation-processor) for more info about selecting which locales get bundled.
 - See [j2cl-locale](https://github.com/mP1/j2cl-locale) for more info about logging.
-
 
 ## Missing/Unsupported APIs
 
@@ -30,15 +25,10 @@ an [annotation processor](https://github.com/mP1/j2cl-java-util-currency-annotat
 
 - getDisplayName (all overloads) are not supported. This would require considerable data due to localization.
 
-
-
-
 ### Transpiling
 
 The `j2cl-maven-plugin` will shade the source during the transpile phase, so `Currency`
 is available in javascript as `java.util.Currency`. 
-
-
 
 ### IDE build setup
 
