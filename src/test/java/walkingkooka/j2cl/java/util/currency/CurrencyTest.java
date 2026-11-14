@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class CurrencyTest implements ShadedClassTesting<Currency>,
-    ToStringTesting<Currency> {
+    ToStringTesting {
 
     @BeforeAll
     public static void beforeJre11Check() {
